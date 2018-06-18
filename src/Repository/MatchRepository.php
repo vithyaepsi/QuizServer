@@ -29,6 +29,8 @@ class MatchRepository extends ServiceEntityRepository
         $qb->leftJoin("r.question", "q");
         $qb->addSelect('q');
 
+
+
         $query = $qb->getQuery();
         $result = $query->getResult();
 

@@ -123,9 +123,10 @@ class Question implements \JsonSerializable
     {
         return [
             "id"  =>  $this->getId(),
-            "category"   =>  $this->getCategory(),
-            //"matches" =>  $this->getMatches()->getValues(),
-            "image" => $this->getImage()
+            //"category"   =>  $this->getCategory(),
+            "answer" =>  $this->getAnswer(),
+            "image" => $this->getImage(),
+            "question_type" => $this->getQuestionType()
         ];
     }
 

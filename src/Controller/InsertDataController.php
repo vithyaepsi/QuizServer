@@ -19,7 +19,6 @@ class InsertDataController extends Controller
     public function index()
     {
 
-
         $em = $this->getDoctrine()->getManager();
 
 
@@ -108,7 +107,7 @@ class InsertDataController extends Controller
 
         $question1 = new Question();
         $question1->setAnswer($answer1);
-        $question1->setImage("topinambour.png");
+        $question1->setImage("topinambour.jpg");
         $question1->setQuestionType($questiontype2);
         $em->persist($question1);
 

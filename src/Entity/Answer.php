@@ -73,7 +73,7 @@ class Answer implements \JsonSerializable
     {
         return [
             "id"  =>  $this->getId(),
-           // "category"   =>  $this->getCategory(),
+            //"category"   =>  $this->getCategory(),
             "text" =>  $this->getText()
         ];
     }
