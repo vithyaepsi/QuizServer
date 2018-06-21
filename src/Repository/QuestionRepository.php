@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use function MongoDB\BSON\toJSON;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -48,13 +49,39 @@ class QuestionRepository extends ServiceEntityRepository
     }
     */
 
+    //  Récupère tous les ids des questions de la base
+    public function getQuestionIds($exclusion = null){
+        $qb = $this->createQueryBuilder('q');
+        $qb->select('q.id');
 
-    public function getRandomQuestion(){
+        if($exclusion !== null){
+            $qb->andWhere($qb->expr()->notIn('q.id', $exclusion));
+        }
 
-        return $this->createQueryBuilder('q')
-            ->setMaxResults(1)
+        return $qb
             ->getQuery()
             ->getResult()
+            ;
+    }
+
+    public function getRandomQuestion($exclusion = null) : ?Question{
+        $questionIdsResult = $this->getQuestionIds($exclusion);
+
+        $questionIds = [];
+        foreach($questionIdsResult as $result){
+            array_push($questionIds, $result["id"]);
+        }
+
+        $randomQuestionId = array_rand($questionIds);
+
+
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.id = :qid')
+            ->setMaxResults(1)
+
+            ->getQuery()
+            ->setParameter("qid", $questionIds[$randomQuestionId])
+            ->getOneOrNullResult()
             ;
     }
 }

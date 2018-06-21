@@ -47,4 +47,41 @@ class CategoryRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    //  Récupère tous les ids des questions de la base
+    public function getCategoryIds($exclusion = null){
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c.id');
+
+        if($exclusion !== null){
+            $qb->andWhere($qb->expr()->notIn('c.id', $exclusion));
+        }
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    //  $exclusion contient un id à exclure de la recherche
+    public function getRandomCategory($exclusion = null) : ?Category {
+        $categoryIdsResult = $this->getCategoryIds($exclusion);
+
+        $categoryIds = [];
+        foreach($categoryIdsResult as $result){
+            array_push($categoryIds, $result["id"]);
+        }
+
+        $randomCategoryId = array_rand($categoryIds);
+
+
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.id = :cid')
+            ->setMaxResults(1)
+
+            ->getQuery()
+            ->setParameter("cid", $categoryIds[$randomCategoryId])
+            ->getOneOrNullResult()
+            ;
+    }
 }

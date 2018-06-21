@@ -83,6 +83,18 @@ class InsertDataController extends Controller
         $answer12->setText("Fouine");
         $answer12->setCategory($category2);
 
+        $answer13 = new Answer();
+        $answer13->setText("Radis");
+        $answer13->setCategory($category1);
+
+        $answer14 = new Answer();
+        $answer14->setText("Jean Claude Van Damme");
+        $answer14->setCategory($category3);
+
+        $answer15 = new Answer();
+        $answer15->setText("Guépard");
+        $answer15->setCategory($category2);
+
         $em->persist($answer1);
         $em->persist($answer2);
         $em->persist($answer3);
@@ -95,6 +107,9 @@ class InsertDataController extends Controller
         $em->persist($answer10);
         $em->persist($answer11);
         $em->persist($answer12);
+        $em->persist($answer13);
+        $em->persist($answer14);
+        $em->persist($answer15);
 
         $questiontype1 = new QuestionType();
         $questiontype1->setText("Trouvez l'intrus");
@@ -117,6 +132,17 @@ class InsertDataController extends Controller
         $question2->setQuestionType($questiontype2);
         $em->persist($question2);
 
+        /*$question3 = new Question();
+        $question3->setAnswer($answer10);
+        $question3->setImage("furet.png");
+        $question3->setQuestionType($questiontype2);
+        $em->persist($question3);*/
+
+        $question4 = new Question();
+        $question4->setAnswer($answer15);
+        $question4->setQuestionType($questiontype1);
+        $em->persist($question4);
+
 
         $round1 = new Round();
         //$round1->setMatches($match);
@@ -135,11 +161,29 @@ class InsertDataController extends Controller
         $round2->addAnswer($answer9);
         $em->persist($round2);
 
+        /*$round3 = new Round();
+        $round3->setQuestion($question3);
+        $round3->addAnswer($answer4);
+        $round3->addAnswer($answer6);
+        $round3->addAnswer($answer7);
+        $round3->addAnswer($answer11);
+        $em->persist($round3);*/
+
+        $round4 = new Round();
+        $round4->setQuestion($question4);
+        $round4->addAnswer($answer7);
+        $round4->addAnswer($answer10);
+        $round4->addAnswer($answer15);
+        $round4->addAnswer($answer13);
+        $em->persist($round4);
+
 
         $match = new Match();
         $match->setName("Match 1");
         $match->addRound($round1);
         $match->addRound($round2);
+        $match->addRound($round4);
+        //$match->addRound($round3);
         $em->persist($match);
 
 

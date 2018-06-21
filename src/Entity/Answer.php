@@ -30,6 +30,11 @@ class Answer implements \JsonSerializable
     private $category;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Question", mappedBy="answer")
+     */
+    private $questions;
+
+    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Round", mappedBy="answers")
      */
     private $rounds;
@@ -73,7 +78,7 @@ class Answer implements \JsonSerializable
     {
         return [
             "id"  =>  $this->getId(),
-            //"category"   =>  $this->getCategory(),
+            "category"   =>  $this->getCategory(),
             "text" =>  $this->getText()
         ];
     }

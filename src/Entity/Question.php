@@ -25,7 +25,7 @@ class Question implements \JsonSerializable
     private $category;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Answer", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Answer", inversedBy="questions")
      * @ORM\JoinColumn(nullable=false)
      */
     private $answer;

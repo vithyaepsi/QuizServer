@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Answer;
 use App\Entity\Match;
 use App\Entity\Question;
 use App\Entity\Round;
@@ -16,12 +17,12 @@ class ApiController extends Controller
     public function index()
     {
         $matchRep = $this->getDoctrine()->getRepository(Match::class);
-        $matchUno = $matchRep->getFullMatch();
+        $match = $matchRep->getRandomFullMatch();
 
         return $this->json([
                 "status" => "ok",
                 "message" => "t'es moche",
-                "data" => $matchUno
+                "data" => $match
             ]
         );
     }
@@ -37,22 +38,62 @@ class ApiController extends Controller
     public function playRandomMatch(){
         $newMatch = new Match();
         $questionRep = $this->getDoctrine()->getRepository(Question::class);
-        $X = 2;
+        $answerRep = $this->getDoctrine()->getRepository(Answer::class);
+        $em = $this->getDoctrine()->getManager();
+        $roundNb = 3;
 
-        for($i = 0; $i < $X; $i++){
-            //  Génération d'un round
-            $newRound = new Round();
-            $question = $questionRep->getRandomQuestion();
+        //$question = $questionRep->getRandomQuestion();
+        //return $this->json(["data" => $question]);
 
-            //$newRound->setQuestion($question);
+        $ignorelist = [];
 
-            return $this->json([
-               "status" => "ok",
-               "message" => "random match generated",
-               "data" => $question
-            ]);
 
+        for($i = 0; $i < $roundNb; $i++){
+            $round = new Round();
+            $question = $questionRep->getRandomQuestion(empty($ignorelist) ? null : $ignorelist);
+            $round->setQuestion($question);
+            array_push($ignorelist, $question->getId());
+
+            //  get the right answer
+            $answers = array();
+            array_push($answers, $question->getAnswer());
+
+            // get 3 wrong answers and the right answer, shuffle and add to round
+            $wrongAnswers = $answerRep->getRandomWrongAnswers($question->getQuestionType(), $question->getAnswer());
+            foreach($wrongAnswers as $ans){
+                array_push($answers, $ans);
+            }
+            shuffle($answers);
+
+            foreach($answers as $ans){
+                //  ajoute les réponses au round
+                $round->addAnswer($ans);
+            }
+
+
+            $em->persist($round);
+
+            $newMatch->addRound($round);
         }
+
+        $newMatch->setName("random shit");
+        $em->persist($newMatch);
+
+        $em->flush();
+
+
+        return $this->json([
+                "status" => "ok",
+                "message" => "Le nouveau match a été enregistré en base.",
+                "data" => $newMatch
+            ]
+        );
+
+    }
+    /**
+     * @Route("/api/test", name="api_test")
+     */
+    public function test(){
 
     }
 }
