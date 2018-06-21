@@ -47,4 +47,14 @@ class QuestionRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+    public function getRandomQuestion(){
+
+        return $this->createQueryBuilder('q')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

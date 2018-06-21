@@ -37,7 +37,7 @@ class Round implements \JsonSerializable
 
     public function __construct()
     {
-        $this->questions = new ArrayCollection();
+        //$this->questions = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->question = new ArrayCollection();
     }
@@ -112,4 +112,6 @@ class Round implements \JsonSerializable
 
         return $this;
     }
+
+
 }
